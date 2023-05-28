@@ -12,10 +12,10 @@ import scipy.io as sio
 path = os.getcwd()
 import matplotlib.pyplot as plt
 from brokenaxes import brokenaxes
-from E_transform import Etrans
 import matplotlib.colors as mcolors
 
-from RotationUtils import Cay, midFrame, Rot2Quat, QuatInv, Cay2Quat, QuatMult, Quat2Rot_33
+from .RotationUtils import Cay, midFrame, Rot2Quat, QuatInv, Cay2Quat, QuatMult, Quat2Rot_33
+from .E_transform import Etrans
 
 
 
