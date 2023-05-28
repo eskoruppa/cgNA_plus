@@ -17,6 +17,9 @@ import matplotlib.colors as mcolors
 from .RotationUtils import Cay, midFrame, Rot2Quat, QuatInv, Cay2Quat, QuatMult, Quat2Rot_33
 from .E_transform import Etrans
 
+import os
+
+
 
 
 plt.rcParams["axes.edgecolor"] = "0.15"
@@ -25,7 +28,10 @@ plt.rcParams['axes.facecolor'] = 'white'
 
 def constructSeqParms(sequence,ps_name):
 
-    ps = scipy.io.loadmat('../Parametersets/' + ps_name)
+    params_path = os.path.join(os.path.dirname(__file__), '../Parametersets/')
+
+    # ps = scipy.io.loadmat('../Parametersets/' + ps_name)
+    ps = scipy.io.loadmat(params_path + ps_name)
 
 	#### Following loop take every input sequence and construct shape and stiff matrix ###
     s_seq = seq_edit(sequence)
