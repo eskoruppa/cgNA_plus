@@ -1,7 +1,6 @@
 import sys, random
 import numpy as np
 import pandas as pd
-import RotationUtils as Rot
 import scipy, scipy.io
 from scipy.linalg import sqrtm
 from scipy.linalg import norm
@@ -15,6 +14,9 @@ import matplotlib.pyplot as plt
 from brokenaxes import brokenaxes
 from E_transform import Etrans
 import matplotlib.colors as mcolors
+
+from RotationUtils import Cay, midFrame, Rot2Quat, QuatInv, Cay2Quat, QuatMult, Quat2Rot_33
+
 
 
 plt.rcParams["axes.edgecolor"] = "0.15"
@@ -96,9 +98,9 @@ def BasepairFrames(s):
     r[0] =np.zeros(1,3) # absolute coordinates of the first basepair
     nbp = (len(s)+18)/24
     for i in range(1,nbp-1):
-        ru = Rot.Cay(inter_r[:,i],5)
+        ru = Cay(inter_r[:,i],5)
         R[i] = np.matmul(R[i-1],ru)
-        H = Rot.midFrame(R[i-1],ru)
+        H = midFrame(R[i-1],ru)
         r[i] = np.add(r[i-1],np.matmul(H,np.transpose(inter_t[i])))
 
     return R,r
@@ -115,29 +117,29 @@ def frames(s):
     for i in range(nbp):
         R[i]=G #merging everything at origin
         r[i]=q #merging everything at origin
-        L = Rot.Cay(intra_r[:,i],5) #basepair
+        L = Cay(intra_r[:,i],5) #basepair
         Gw = np.matmul(G,(np.transpose(intra_t[:,i]))) #basepair
         Rc[i] = np.matmul(G,np.transpose(np.real(sqrtm(L))))   #complementray strand
         rc[i] = np.subtract(q,np.multiply(0.5,Gw))   #complementray strand
         Rw[i] = np.matmul(Rc[i],L) 	#original strand
         rw[i] = np.add(rc[i],Gw)        #original strand
         if i < nbp-1:
-            ru= Rot.Cay(inter_r[:,i],5)
-            H = Rot.midFrame(G,ru)
+            ru= Cay(inter_r[:,i],5)
+            H = midFrame(G,ru)
  ################## Next base pair #################
             G = np.matmul(G,ru)
             q = np.add(q,np.matmul(H,np.transpose(inter_t[:,i])))
 
 ################### Compute the phosphate groups' frames ##################
     for i in range(nbp-1):
-        Rpw[i+1]=np.matmul(Rw[i+1],Rot.Cay(pho_W_r[:,i],5)) 
+        Rpw[i+1]=np.matmul(Rw[i+1],Cay(pho_W_r[:,i],5)) 
         rpw[i+1]=np.add(rw[i+1],np.matmul(Rw[i+1],pho_W_t[:,i]))
        
         Pmat = np.identity(3)
         Pmat[1,1]=-1
         Pmat[2,2]=-1
         RcP=np.matmul(Rc[i],Pmat)
-        Rpc[i]=np.matmul(RcP,Rot.Cay(pho_C_r[:,i],5))
+        Rpc[i]=np.matmul(RcP,Cay(pho_C_r[:,i],5))
         rpc[i]=np.add(rc[i],np.matmul(RcP,pho_C_t[:,i]))
         
     return R, r, Rc, rc, Rw, rw, Rpw , rpw , Rpc, rpc
@@ -180,13 +182,13 @@ def TanTan(s,R0):
 
     TanTan=np.zeros(nbp-1)
     
-    q=Rot.Rot2Quat(R0)
-    qinv = Rot.QuatInv(q)
+    q=Rot2Quat(R0)
+    qinv = QuatInv(q)
     
     for i in range(nbp-1):
-        q = Rot.QuatMult(q,Rot.Cay2Quat(u[:,i],5))
-        qtantan = Rot.QuatMult(qinv,q)
-        TanTan[i] = Rot.Quat2Rot_33(qtantan)
+        q = QuatMult(q,Cay2Quat(u[:,i],5))
+        qtantan = QuatMult(qinv,q)
+        TanTan[i] = Quat2Rot_33(qtantan)
                
     return TanTan
 
