@@ -9,7 +9,6 @@ from scipy.sparse.linalg import spsolve
 from matplotlib import gridspec
 import os, sys, time, copy
 import scipy.io as sio
-path = os.getcwd()
 import matplotlib.pyplot as plt
 from brokenaxes import brokenaxes
 import matplotlib.colors as mcolors
