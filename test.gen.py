@@ -12,4 +12,4 @@ if __name__ == "__main__":
 
     _DEFAULT_DATASET = 'cgDNA+_Curves_BSTJ_10mus_FS'
 
-    _constructSeqParms_closed(seq),_DEFAULT_DATASET)
+    _constructSeqParms_closed(seq,_DEFAULT_DATASET)
