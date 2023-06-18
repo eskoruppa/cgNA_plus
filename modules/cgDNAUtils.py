@@ -98,8 +98,23 @@ def _constructSeqParms_closed(sequence: str ,ps_name: str):
     # ps = scipy.io.loadmat('../Parametersets/' + ps_name)
     ps = scipy.io.loadmat(params_path + ps_name)
 
-    print(type(ps))
-    sys.exit()
+    print(ps.keys())
+
+    print(ps['stiff_int'][0].shape)
+
+    print(type(ps['stiff_int']))
+    print(type(ps['stiff_int']['AA']))
+    print(type(ps['stiff_int'].item))
+
+    # print(ps['stiff_int']['AA'])
+
+    # for key in ps['stiff_int'].keys():
+    #     print(key)
+
+
+
+    # print(type(ps))
+    # sys.exit()
 
 	#### Following loop take every input sequence and construct shape and stiff matrix ###
     s_seq = seq_edit(sequence)
@@ -113,6 +128,25 @@ def _constructSeqParms_closed(sequence: str ,ps_name: str):
 
     if nbp <= 3:
         raise ValueError(f'Sequence length must be greater than or equal to 4. Current length is {nbp}.')
+
+
+    data,row,col = {},{},{}
+
+    for i in range(2,nbp-1):
+        tmp_ind = np.nonzero(ps['stiff_int'][s_seq[i-1:i+1]][0][0][0:42, 0:42])
+        data[i-1] = ps['stiff_int'][s_seq[i-1:i+1]][0][0][tmp_ind[0][:], tmp_ind[1][:]]
+
+        print(data)
+        sys.exit()
+
+        di = 24*(i-2)+18
+        row[i-1] = tmp_ind[0][:]+np.ones((1,np.size(tmp_ind[0][:])))*di
+        col[i-1] = tmp_ind[1][:]+np.ones((1,np.size(tmp_ind[1][:])))*di
+
+        print(row[i-1],col[i-1])
+        
+        s[di:di+42] = np.add(s[di:di+42],ps['sigma_int'][s_seq[i-1:i+1]][0][0][0:42])
+
 
 
     data,row,col = {},{},{}
@@ -131,6 +165,8 @@ def _constructSeqParms_closed(sequence: str ,ps_name: str):
         di = 24*(i-2)+18
         row[i-1] = tmp_ind[0][:]+np.ones((1,np.size(tmp_ind[0][:])))*di
         col[i-1] = tmp_ind[1][:]+np.ones((1,np.size(tmp_ind[1][:])))*di
+
+        print(row[i-1],col[i-1])
         
         s[di:di+42] = np.add(s[di:di+42],ps['sigma_int'][s_seq[i-1:i+1]][0][0][0:42])
         

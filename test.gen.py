@@ -2,7 +2,7 @@ import numpy as np
 import time
 from typing import List, Dict, Tuple
 
-from .modules.cgDNAUtils import _constructSeqParms_closed
+from modules.cgDNAUtils import _constructSeqParms_closed
 
 if __name__ == "__main__":
 
