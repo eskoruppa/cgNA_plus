@@ -92,110 +92,121 @@ def constructSeqParms(sequence: str ,ps_name: str, closed: bool=False):
     return ground_state,stiff
 
 
-def _constructSeqParms_closed(sequence: str ,ps_name: str):
+# def _constructSeqParms_closed(sequence: str ,ps_name: str):
 
-    params_path = os.path.join(os.path.dirname(__file__), '../Parametersets/')
-    # ps = scipy.io.loadmat('../Parametersets/' + ps_name)
-    ps = scipy.io.loadmat(params_path + ps_name)
+#     params_path = os.path.join(os.path.dirname(__file__), '../Parametersets/')
+#     # ps = scipy.io.loadmat('../Parametersets/' + ps_name)
+#     ps = scipy.io.loadmat(params_path + ps_name)
 
-    print(ps.keys())
+#     print(ps.keys())
 
-    print(ps['stiff_int'][0].shape)
+#     print(ps['stiff_int'][0].shape)
 
-    print(type(ps['stiff_int']))
-    print(type(ps['stiff_int']['AA']))
-    print(type(ps['stiff_int'].item))
+#     print(type(ps['stiff_int']))
+#     print(type(ps['stiff_int']['AA']))
+#     print(type(ps['stiff_int'].item))
 
-    # print(ps['stiff_int']['AA'])
+#     # print(ps['stiff_int']['AA'])
 
-    # for key in ps['stiff_int'].keys():
-    #     print(key)
-
-
-
-    # print(type(ps))
-    # sys.exit()
-
-	#### Following loop take every input sequence and construct shape and stiff matrix ###
-    s_seq = seq_edit(sequence)
-    nbp = len(s_seq.strip())
-    N = 24*nbp-18
-
-	#### Initialise the sigma vector ###		
-    s = np.zeros((N,1))
-
-    #### Error report if sequence provided is less than 2 bp #### 
-
-    if nbp <= 3:
-        raise ValueError(f'Sequence length must be greater than or equal to 4. Current length is {nbp}.')
+#     # for key in ps['stiff_int'].keys():
+#     #     print(key)
 
 
-    data,row,col = {},{},{}
 
-    for i in range(2,nbp-1):
-        tmp_ind = np.nonzero(ps['stiff_int'][s_seq[i-1:i+1]][0][0][0:42, 0:42])
-        data[i-1] = ps['stiff_int'][s_seq[i-1:i+1]][0][0][tmp_ind[0][:], tmp_ind[1][:]]
+#     # print(type(ps))
+#     # sys.exit()
 
-        print(data)
-        sys.exit()
+# 	#### Following loop take every input sequence and construct shape and stiff matrix ###
+#     s_seq = seq_edit(sequence)
+#     nbp = len(s_seq.strip())
+#     N = 24*nbp-18
 
-        di = 24*(i-2)+18
-        row[i-1] = tmp_ind[0][:]+np.ones((1,np.size(tmp_ind[0][:])))*di
-        col[i-1] = tmp_ind[1][:]+np.ones((1,np.size(tmp_ind[1][:])))*di
+# 	#### Initialise the sigma vector ###		
+#     s = np.zeros((N,1))
 
-        print(row[i-1],col[i-1])
+#     #### Error report if sequence provided is less than 2 bp #### 
+
+#     if nbp <= 3:
+#         raise ValueError(f'Sequence length must be greater than or equal to 4. Current length is {nbp}.')
+
+
+#     data,row,col = {},{},{}
+
+#     for i in range(2,nbp-1):
+#         tmp_ind = np.nonzero(ps['stiff_int'][s_seq[i-1:i+1]][0][0][0:42, 0:42])
+#         data[i-1] = ps['stiff_int'][s_seq[i-1:i+1]][0][0][tmp_ind[0][:], tmp_ind[1][:]]
+
+#         print(ps['stiff_int'][s_seq[i-1:i+1]][0][0].shape)
+
+#         tmp_ind1 = np.nonzero(ps['stiff_int'][s_seq[i-1:i+1]][0][0])
+
+#         print(np.sum(tmp_ind[0]-tmp_ind1[0]))
+#         print(np.sum(tmp_ind[1]-tmp_ind1[1]))
+
+#         print(tmp_ind[0].shape)
+#         print(tmp_ind[1].shape)
+
+#         print(data[1])
+#         print(data[1].shape)
+#         sys.exit()
+
+#         di = 24*(i-2)+18
+#         row[i-1] = tmp_ind[0][:]+np.ones((1,np.size(tmp_ind[0][:])))*di
+#         col[i-1] = tmp_ind[1][:]+np.ones((1,np.size(tmp_ind[1][:])))*di
+
+#         print(row[i-1],col[i-1])
         
-        s[di:di+42] = np.add(s[di:di+42],ps['sigma_int'][s_seq[i-1:i+1]][0][0][0:42])
+#         s[di:di+42] = np.add(s[di:di+42],ps['sigma_int'][s_seq[i-1:i+1]][0][0][0:42])
 
 
 
-    data,row,col = {},{},{}
+#     data,row,col = {},{},{}
     
-    ### 5' end #### 
-    tmp_ind = np.nonzero(ps['stiff_end5'][s_seq[0:2]][0][0][0:36,0:36])
-    row[0],col[0] = tmp_ind[0][:],tmp_ind[1][:]
-    data[0] = ps['stiff_end5'][s_seq[0:2]][0][0][row[0],col[0]]
+#     ### 5' end #### 
+#     tmp_ind = np.nonzero(ps['stiff_end5'][s_seq[0:2]][0][0][0:36,0:36])
+#     row[0],col[0] = tmp_ind[0][:],tmp_ind[1][:]
+#     data[0] = ps['stiff_end5'][s_seq[0:2]][0][0][row[0],col[0]]
     
-    s[0:36] = ps['sigma_end5'][s_seq[0:2]][0][0][0:36]
-    #### interior blocks  ###
-    for i in range(2,nbp-1):
-        tmp_ind = np.nonzero(ps['stiff_int'][s_seq[i-1:i+1]][0][0][0:42, 0:42])
-        data[i-1] = ps['stiff_int'][s_seq[i-1:i+1]][0][0][tmp_ind[0][:], tmp_ind[1][:]]
+#     s[0:36] = ps['sigma_end5'][s_seq[0:2]][0][0][0:36]
+#     #### interior blocks  ###
+#     for i in range(2,nbp-1):
+#         tmp_ind = np.nonzero(ps['stiff_int'][s_seq[i-1:i+1]][0][0][0:42, 0:42])
+#         data[i-1] = ps['stiff_int'][s_seq[i-1:i+1]][0][0][tmp_ind[0][:], tmp_ind[1][:]]
         
-        di = 24*(i-2)+18
-        row[i-1] = tmp_ind[0][:]+np.ones((1,np.size(tmp_ind[0][:])))*di
-        col[i-1] = tmp_ind[1][:]+np.ones((1,np.size(tmp_ind[1][:])))*di
+#         di = 24*(i-2)+18
+#         row[i-1] = tmp_ind[0][:]+np.ones((1,np.size(tmp_ind[0][:])))*di
+#         col[i-1] = tmp_ind[1][:]+np.ones((1,np.size(tmp_ind[1][:])))*di
 
-        print(row[i-1],col[i-1])
+#         print(row[i-1],col[i-1])
         
-        s[di:di+42] = np.add(s[di:di+42],ps['sigma_int'][s_seq[i-1:i+1]][0][0][0:42])
+#         s[di:di+42] = np.add(s[di:di+42],ps['sigma_int'][s_seq[i-1:i+1]][0][0][0:42])
         
-    #### 3' end ####
-    tmp_ind = np.nonzero(ps['stiff_end3'][s_seq[nbp-2:nbp]][0][0][0:36, 0:36])
-    data[nbp-1] = ps['stiff_end3'][s_seq[nbp-2:nbp]][0][0][tmp_ind[0][:], tmp_ind[1][:]]
+#     #### 3' end ####
+#     tmp_ind = np.nonzero(ps['stiff_end3'][s_seq[nbp-2:nbp]][0][0][0:36, 0:36])
+#     data[nbp-1] = ps['stiff_end3'][s_seq[nbp-2:nbp]][0][0][tmp_ind[0][:], tmp_ind[1][:]]
     
-    di = 24*(nbp-3)+18
-    row[nbp-1] = tmp_ind[0][:]+np.ones((1,np.size(tmp_ind[0][:])))*di
-    col[nbp-1] = tmp_ind[1][:]+np.ones((1,np.size(tmp_ind[1][:])))*di
-    s[N-36:N] = s[N-36:N] + ps['sigma_end3'][s_seq[nbp-2:nbp]][0][0][0:36]
+#     di = 24*(nbp-3)+18
+#     row[nbp-1] = tmp_ind[0][:]+np.ones((1,np.size(tmp_ind[0][:])))*di
+#     col[nbp-1] = tmp_ind[1][:]+np.ones((1,np.size(tmp_ind[1][:])))*di
+#     s[N-36:N] = s[N-36:N] + ps['sigma_end3'][s_seq[nbp-2:nbp]][0][0][0:36]
     
-    tmp = list(row.values())
-    row = np.concatenate(tmp,axis=None)
+#     tmp = list(row.values())
+#     row = np.concatenate(tmp,axis=None)
     
-    tmp = list(col.values())
-    col = np.concatenate(tmp,axis=None)
+#     tmp = list(col.values())
+#     col = np.concatenate(tmp,axis=None)
 
-    tmp = list(data.values())
-    data = np.concatenate(tmp,axis=None)
+#     tmp = list(data.values())
+#     data = np.concatenate(tmp,axis=None)
     
 
-    #### Create the sparse Stiffness matrix from data,row_ind,col_ind  ###
-    stiff =  csc_matrix((data, (row,col)), shape =(N,N))	
+#     #### Create the sparse Stiffness matrix from data,row_ind,col_ind  ###
+#     stiff =  csc_matrix((data, (row,col)), shape =(N,N))	
 
-    #### Groudstate calculation ####
-    ground_state = spsolve(stiff, s) 
+#     #### Groudstate calculation ####
+#     ground_state = spsolve(stiff, s) 
 
-    return ground_state,stiff
+#     return ground_state,stiff
 
 
 
