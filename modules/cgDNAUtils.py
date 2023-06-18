@@ -31,9 +31,6 @@ def constructSeqParms(sequence: str ,ps_name: str, closed: bool=False):
     # ps = scipy.io.loadmat('../Parametersets/' + ps_name)
     ps = scipy.io.loadmat(params_path + ps_name)
 
-    print(type(ps))
-    sys.exit()
-
 	#### Following loop take every input sequence and construct shape and stiff matrix ###
     s_seq = seq_edit(sequence)
     nbp = len(s_seq.strip())
@@ -95,11 +92,14 @@ def constructSeqParms(sequence: str ,ps_name: str, closed: bool=False):
     return ground_state,stiff
 
 
-def _constructSeqParms_closed(ps ,ps_name: str):
+def _constructSeqParms_closed(sequence: str ,ps_name: str):
 
     params_path = os.path.join(os.path.dirname(__file__), '../Parametersets/')
     # ps = scipy.io.loadmat('../Parametersets/' + ps_name)
     ps = scipy.io.loadmat(params_path + ps_name)
+
+    print(type(ps))
+    sys.exit()
 
 	#### Following loop take every input sequence and construct shape and stiff matrix ###
     s_seq = seq_edit(sequence)
