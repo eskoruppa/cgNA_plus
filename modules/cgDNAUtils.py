@@ -1,29 +1,28 @@
-import sys, random
+# import sys, random
 import numpy as np
-import pandas as pd
+# import pandas as pd
 import scipy, scipy.io
 from scipy.linalg import sqrtm
 from scipy.linalg import norm
 from scipy.sparse import csc_matrix
 from scipy.sparse.linalg import spsolve
-from matplotlib import gridspec
-import os, sys, time, copy
-import scipy.io as sio
-import matplotlib.pyplot as plt
+# from matplotlib import gridspec
+import os
+# import sys
+# import time
+import copy
+# import scipy.io as sio
+# import matplotlib.pyplot as plt
 # from brokenaxes import brokenaxes
-import matplotlib.colors as mcolors
+# import matplotlib.colors as mcolors
 
 from .RotationUtils import Cay, midFrame, Rot2Quat, QuatInv, Cay2Quat, QuatMult, Quat2Rot_33
-from .E_transform import Etrans
-
-import os
+# from .E_transform import Etrans
 
 
-
-
-plt.rcParams["axes.edgecolor"] = "0.15"
-plt.rcParams["axes.linewidth"]  = 0.5
-plt.rcParams['axes.facecolor'] = 'white'
+# plt.rcParams["axes.edgecolor"] = "0.15"
+# plt.rcParams["axes.linewidth"]  = 0.5
+# plt.rcParams['axes.facecolor'] = 'white'
 
 def constructSeqParms(sequence: str ,ps_name: str, closed: bool=False):
 
